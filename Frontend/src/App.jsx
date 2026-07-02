@@ -79,22 +79,7 @@ function App(){
     }
     return (
       <div className="container">
-        <h1>Notifications Platform</h1>
-        <h2>notification Id ${notifications.id}</h2>
-        <p>Type ${notifications.Type}</p>
-        <p>Message ${notifications.Message}</p>
-        <p> Timestamp ${notifications.Timestamp}</p>
-        {
-          editId ?
-          <button onClick={updateNotification()}>Update Notification</button>
-          :
-          <button onClick={addNotification()}>Add Notification</button>
-          <br></br>
-        }
-
-            notifications.map(notification)=>{
-              <div className="card" key={notifications.id}>
-                <input type="text"
+        <input type="text"
                 placeholder="id"
                 value={id}
                 onChange={(e)=>target.value.setId()}/>
@@ -112,10 +97,26 @@ function App(){
                 value={Timestamp}
                 onChange={(e)=>target.value.setTimestamp()}/>
                 <br></br>
-                <button onClick={deletenotification(id)}>Delete</button>
+                 {
+          editId ?
+          <button onClick={updateNotification}>Update Notification</button>
+          :
+          <button onClick={addNotification}> Add Notification</button>
+          <br></br>
+        } 
+        {      
+            notifications.map((notification)=>(
+            <div className="card" key={notification.id}>
+              <h1>Notifications Platform</h1>
+              <h2>notification Id ${notifications.id}</h2>
+               <p>Type {notifications.Type}</p>
+               <p>Message {notifications.Message}</p>
+                <p> Timestamp {notifications.Timestamp}</p>
+               <button onClick={()=>deletenotification(notification.id)}>Delete</button>
                 <br></br>
-                <button onClick={editNotification}>Edit</button>
+                <button onClick={()=>editNotification(notification)}>Edit</button>
                 </div>
+            ))
             }
         </div>
     );
