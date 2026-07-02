@@ -1,21 +1,21 @@
-import {useEffect,useState} from "react"
-import axios from "axios"
-import "./App.css"
- 
+import {useEffect,useState} from "react";
+import axios from "axios";
+
 function App(){
-  const [notification,setNotification]=usestate([]);
+  const [notifications,setNotifications]=useState([]);
   const [id,setId]=useState("");
   const [type,setType]=useState("");
   const [message,setMessage]=useState("");
   const [timestamp,setTimestamp]=useState("");
   const [editId,setEditId]=useState(null);
   useEffect(()=>{
-    getNotifications()},[])
+    getNotification();
+  },[])
     async function getNotification(){
       try{
-      const response=await axios.get("http://localhost/3000/notifications")
+      const response=await axios.get("http://localhost:3000/notifications")
       console.log(response.data);
-      setNotification(response.data);
+      setNotifications(response.data);
       }
       catch(error){
         console.log(error);
@@ -26,7 +26,7 @@ function App(){
         id,
         Type,
         Message,
-        Timestamp
+        timestamp:Number(timestamp)
       }
       try{
         await axios.post("http://localhost:3000/notifications",newNotification);
@@ -37,10 +37,10 @@ function App(){
         console.log(error);
       }
     }
-    async function deletenotification(notificationsid){
+    async function deletenotification(id){
       try{
-        await axios.delete(`http://localhost:3000/notifications/$(notificationsid)`)
-        getNotifications();
+        await axios.delete(`http://localhost:3000/notifications/${id}`);
+        getNotification();
         clearform();
       }
       catch(error){
@@ -52,66 +52,67 @@ function App(){
         id,
         Type,
         Message,
-        Timestamp
+        timestamp:Number(timestamp)
       }
       try{
-        await axios.put(`http://localhost/3000/notifications/${editId}`,updatedNotification);
-        getNotifications();
+        await axios.put(`http://localhost:3000/notifications/${editId}`,updatedNotification);
+        getNotification();
         setEditId(null);
-        clearforms();
+        clearform();
       }
       catch(error){
         console.log(error)
       }
     }
-    async function editNotification(){
+    function editNotification(){
       setId(notifications.id);
-      setType(notifications.Type);
-      setMessage(notifications.Message);
-      setTimestamp(notifications.Timestamp);
+      setType(notifications.type);
+      setMessage(notifications.message);
+      setTimestamp(notifications.timestamp);
     }
     function clearform(){
       setId("");
       setType("");
       setMessage("");
       setTimestamp("");
-      setEditId("");
+      setEditId(null);
     }
     return (
       <div className="container">
         <input type="text"
                 placeholder="id"
                 value={id}
-                onChange={(e)=>target.value.setId()}/>
+                onChange={(e)=>setId(e.target.value)}/>
                 <br></br>
                 <input type="text"
                 placeholder="Type"
-                value={Type}
-                onChange={(e)=>target.value.setType()}/>
+                value={type}
+                onChange={(e)=>setType(e.target.value)}/>
+                <br></br>
                 <input type="text"
                 placeholder="Message"
-                value={Message}
-                onChange={(e)=>target.value.setMessage()}/>
+                value={message}
+                onChange={(e)=>setMessage(e.target.value)}/>
+                <br></br>
                 <input type="number"
                 placeholder="Timestamp"
-                value={Timestamp}
-                onChange={(e)=>target.value.setTimestamp()}/>
+                value={timestamp}
+                onChange={(e)=>setTimestamp(e.target.value)}/>
                 <br></br>
                  {
           editId ?
           <button onClick={updateNotification}>Update Notification</button>
           :
           <button onClick={addNotification}> Add Notification</button>
-          <br></br>
         } 
         {      
             notifications.map((notification)=>(
             <div className="card" key={notification.id}>
               <h1>Notifications Platform</h1>
-              <h2>notification Id ${notifications.id}</h2>
-               <p>Type {notifications.Type}</p>
-               <p>Message {notifications.Message}</p>
-                <p> Timestamp {notifications.Timestamp}</p>
+              <h2>notification Id ${notification.id}</h2>
+               <p>Type {notification.type}</p>
+               <p>Message {notification.message}</p>
+                <p> Timestamp {notification.timestamp}</p>
                <button onClick={()=>deletenotification(notification.id)}>Delete</button>
                 <br></br>
                 <button onClick={()=>editNotification(notification)}>Edit</button>
