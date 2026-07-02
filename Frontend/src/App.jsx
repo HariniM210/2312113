@@ -48,7 +48,14 @@ function App(){
       }
     }
     async function updateNotification(){
+      const updatedNotification={
+        id,
+        Type,
+        Message,
+        Timestamp
+      }
       try{
+        await axios.put(`http://localhost/3000/notifications/${editId}`,updatedNotification);
         getNotifications();
         setEditId(null);
         clearforms();
@@ -70,6 +77,48 @@ function App(){
       setTimestamp("");
       setEditId("");
     }
+    return (
+      <div className="container">
+        <h1>Notifications Platform</h1>
+        <h2>notification Id ${notifications.id}</h2>
+        <p>Type ${notifications.Type}</p>
+        <p>Message ${notifications.Message}</p>
+        <p> Timestamp ${notifications.Timestamp}</p>
+        {
+          editId ?
+          <button onClick={updateNotification()}>Update Notification</button>
+          :
+          <button onClick={addNotification()}>Add Notification</button>
+          <br></br>
+        }
+
+            notifications.map(notification)=>{
+              <div className="card" key={notifications.id}>
+                <input type="text"
+                placeholder="id"
+                value={id}
+                onChange={(e)=>target.value.setId()}/>
+                <br></br>
+                <input type="text"
+                placeholder="Type"
+                value={Type}
+                onChange={(e)=>target.value.setType()}/>
+                <input type="text"
+                placeholder="Message"
+                value={Message}
+                onChange={(e)=>target.value.setMessage()}/>
+                <input type="number"
+                placeholder="Timestamp"
+                value={Timestamp}
+                onChange={(e)=>target.value.setTimestamp()}/>
+                <br></br>
+                <button onClick={deletenotification(id)}>Delete</button>
+                <br></br>
+                <button onClick={editNotification}>Edit</button>
+                </div>
+            }
+        </div>
+    );
 
 }
 export default App
